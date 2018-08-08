@@ -25,6 +25,8 @@ data: {
     page: 0,
     cur: 0,
     imgLoad: '/img/load.png',
+    classNote: 'item-',  
+    count: 0,
     isHideLoadMore: 'none',
     newData: { title: '这是标题', source: 'WPS' }
 },
@@ -44,6 +46,9 @@ onLoad: function () {  // 页面首次载入
 },
 
 onReady: function() {
+    this.setData({
+        count: 10
+    })
     this.showImg();
 },
 
@@ -77,7 +82,7 @@ loadList: function (page, url, repaint) {
     var page = page + 1;
     page = ( ( page * 10) - 10 + '-' + (page * 10) ) +'.html';
     // var url = url+page;
-    console.log(url)
+    // console.log(url)
     wx.request({
     url: url,
     method: 'get',
@@ -91,10 +96,10 @@ loadList: function (page, url, repaint) {
         })
         }
         that.data.newslist.forEach((e)=>{
-            e.imgShow = 1;
+            e.imgShow = false;
         })
         that.setData({
-        isHideLoadMore: 'block'
+            isHideLoadMore: 'block'
         })
     },
     fail: () =>{
@@ -106,6 +111,7 @@ loadList: function (page, url, repaint) {
         });
     }
     });
+    // this.showImg()
 },
 
 onMyEvent: function (e) {
@@ -115,19 +121,59 @@ onMyEvent: function (e) {
     this.loadList(this.data.page, url, '1')
 },
 
+//version one
+// showImg(){
+//     var that = this
+//     var newslist = that.data.newslist // 获取图片数组数据
+    
+//     for (let i in that.data.newslist){
+//         wx.createIntersectionObserver().relativeToViewport().observe('.img' + i, (ret) => {
+//             console.log(132)
+//             if (ret.intersectionRatio > 0) {
+//                 newslist[i].imgShow = true
+//             }
+//             // var arr = newslist
+//             that.setData({
+//                 newslist
+//             })
+//         })
+//     }
+// }
 
-showImg(){
-    let newslist = this.data.newslist // 获取图片数组数据
-    for(let i in this.data.newslist){
-        wx.createIntersectionObserver().relativeToViewport().observe('.img' + i, (ret) => {
-            if (ret.intersectionRatio > 0) {
-                newslist[i].imgShow = true
-            }
-            // this.setData({
-            //     newslist: newslist
-            // })
-        })
+// showImg() {
+//         var that = this
+//         var newslist = that.data.newslist // 获取图片数组数据
+//         var oldCount = this.data.count
+
+//         for (let i in that.data.newslist) {
+//             wx.createIntersectionObserver().relativeToViewport().observe('.item-' + oldCount, (ret) => {
+//                 console.log(132)
+//                 if (ret.intersectionRatio > 0) {
+//                     that.setData({
+//                         count: that.data.count + 10
+//                     })
+//                 } 
+//                 that.showImg();
+//             })
+//         }
+//     }
+
+    showImg() {
+        var that = this;
+        // var intersectionObserver = wx.createIntersectionObserver();
+        //这里bottom：100，是指显示区域以下 100px 时，就会触发回调函数。
+        for(let i in that.data.newslist){
+            wx.createIntersectionObserver().relativeToViewport().observe('.item-' + this.data.count, (res) => {
+                console.log(123)
+                if (res.boundingClientRect.top > 0) {
+                    // intersectionObserver.disconnect()
+                    that.setData({
+                        count: that.data.count + 10
+                    })
+                    that.showImg();
+                }
+            })
+        }   
     }
-}
 
 })
