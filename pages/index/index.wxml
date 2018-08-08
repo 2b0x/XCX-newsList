@@ -1,0 +1,54 @@
+<!--index.wxml-->
+<view class="container">
+    <topNav bindmyevent="onMyEvent" navData="{{navData}}"></topNav>
+    <view class='itemBox'>
+        <block wx:for="{{newslist}}" wx:key="{{index}}" >
+            <view wx:if="{{item.imgextra && item.url_3w}}">
+                <navigator class='item type01' url="../detail/detail?url={{item.url_3w}}">
+                    <text class='title mar-b-15'>{{item.title}}</text>
+                    <view class='imgBox'>
+                        <image data-src="{{ite['imgShow']==1}}" src="{{item['imgShow'] ? ite['imgsrc'] : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.imgextra}}" class="{{'img'+index}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>             
+                    </view>
+                    <text class='from'>{{item.source}}</text>
+                </navigator>
+            </view>
+
+            <view wx:if="{{!item.imgextra && item.url_3w}}">
+                <navigator class='item type02' url="../detail/detail?url={{item.url_3w}}">
+                    <view class='lf pic'>
+                        <image data-src="{{ite['imgShow']==1}}" src="{{item['imgShow'] ? item['imgsrc'] : imgLoad}}" class="{{'img'+index}}"></image>
+                    </view>
+                    <view class='lf info'>
+                        <view><text class='title' bindtap='console'>{{item.title}}</text></view>
+                        <view><text class='from'>{{item.source}}</text></view>
+                    </view>
+                </navigator>
+            </view>
+        </block>
+    </view>
+
+    <!-- <view class='item type02'>
+        <view class='lf img'>
+          <image src="{{item.imgsrc}}" mode='aspectFill'></image>
+        </view>
+        <view class='lf info'>
+          <view><text class='title' bindtap='console'>这是标题</text></view>
+          <view><text class='from'>WPS</text></view>
+        </view>
+    </view>
+    <view class='item type02'>
+        <view class='lf img'>
+          <image src="{{item.imgsrc}}" mode='aspectFill'></image>
+        </view>
+        <view class='lf info'>
+          <view><text class='title' bindtap='console'>这是标题</text></view>
+          <view><text class='from'>WPS</text></view>
+        </view>
+    </view> -->
+
+
+    <view class='load' style="display:{{isHideLoadMore}}">
+      <load></load>
+    </view>
+    
+</view>

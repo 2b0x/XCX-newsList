@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "topNav": "/components/topNav/topNav",
+    "load": "/components/load/load"
+  },
+  "enablePullDownRefresh": true
+}

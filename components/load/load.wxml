@@ -1,0 +1,6 @@
+<view class="spinner">
+  <text class='circle'></text>
+</view>
+<view class='text'>
+  <text>正在加载...</text>
+</view>
