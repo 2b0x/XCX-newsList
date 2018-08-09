@@ -3,26 +3,28 @@
     <topNav bindmyevent="onMyEvent" navData="{{navData}}"></topNav>
     <view class='itemBox'>
         <block wx:for="{{newslist}}" wx:key="{{index}}" >
-            <view class="item-{{index}}" wx:if="{{item.imgextra && item.url_3w}}">
-                <navigator class='item type01' url="../detail/detail?url={{item.url_3w}}">
+            <view class="item-{{index}}" wx:if="{{item.img.length>1}}">
+                <navigator class='item type01' url="../detail/detail?url={{item.url}}">
                     <text class='title mar-b-15'>{{item.title}}</text>
                     <view class='imgBox'>
                         <!-- <image data-src="{{item.title}}" src="{{item['imgShow'] ? ite['imgsrc'] : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.imgextra}}" class="{{'img'+index}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>              -->
-                        <image src="{{index < count ? ite['imgsrc'] : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.imgextra}}" class="{{'img'+index}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image> 
+                        <!-- <image lazy-load="true" src="{{index < count ? ite : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image> -->
+                        <image src="{{ite}}" lazy-load wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>  
                     </view>
-                    <text class='from'>{{item.source}}</text>
+                    <text class='from'>{{item.from}}</text>
                 </navigator>
             </view>
 
-            <view class="item-{{index}}" wx:if="{{!item.imgextra && item.url_3w}}">
-                <navigator class='item type02' url="../detail/detail?url={{item.url_3w}}">
+            <view class="item-{{index}}" wx:if="{{item.img.length==1}}">
+                <navigator class='item type02' url="../detail/detail?url={{item.url}}">
                     <view class='lf pic'>
                         <!-- <image data-src="{{item['imgShow']}}" src="{{item['imgShow'] ? item['imgsrc'] : imgLoad}}" class="{{'img'+index}}"></image> -->
-                        <image src="{{index < count ? item['imgsrc'] : imgLoad}}" class="{{'img'+index}}"></image>
+                        <!-- <image src="{{index < count ? item['img'][0] : imgLoad}}" class="{{'img'+index}}" lazy-load="true"></image> -->
+                        <image src="{{item['img'][0]}}" class="{{'img'+index}}" lazy-load></image>
                     </view>
                     <view class='lf info'>
                         <view><text class='title' bindtap='console'>{{item.title}}</text></view>
-                        <view><text class='from'>{{item.source}}</text></view>
+                        <view><text class='from'>{{item.from}}</text></view>
                     </view>
                 </navigator>
             </view>
@@ -47,7 +49,6 @@
           <view><text class='from'>WPS</text></view>
         </view>
     </view> -->
-
 
     <view class='load' style="display:{{isHideLoadMore}}">
       <load></load>

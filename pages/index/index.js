@@ -1,39 +1,33 @@
-var url = 'http://10.13.144.3/index.php';
 Page({
 data: {
     navData: [
-    { text: '头条' },
-    { text: '精选' },
-    { text: '娱乐' },
-    { text: '汽车' },
-    { text: '运动' },
-    { text: '平顶山' },
-    { text: '漫画' }
+        { text: '推荐', catid: 0 },
+        { text: '热点', catid: 1 },
+        { text: '娱乐', catid: 1183 },
+        { text: '汽车', catid: 1185 },
+        { text: '游戏', catid: 1349 },
+        { text: '时尚', catid: 1173 },
+        { text: '科技', catid: 1179 },
+        { text: '体育', catid: 1178 },
+        { text: '文化', catid: 1172 },
+        { text: '教育', catid: 1186 },
+        { text: '房产', catid: 1350 },
+        { text: '旅游', catid: 1298 },
+        { text: '军事', catid: 1474 }
     ],
-    navUrl:[
-    'http://c.m.163.com/nc/article/headline/T1348647853363/',
-    'http://c.3g.163.com/nc/article/list/T1467284926140/',
-    'http://c.3g.163.com/nc/article/list/T1348648517839/',
-    'http://c.m.163.com/nc/auto/list/5bmz6aG25bGx/',
-    'http://c.3g.163.com/nc/article/list/T1348649079062/',
-    'http://c.3g.163.com/nc/article/local/5bmz6aG25bGx/',
-    'http://c.m.163.com/nc/article/list/T1444270454635/'
-    ],
+    url: 'http://feed.mini.wps.cn/feed/v1/news?hdid=78ae09ead772825aa5a4d86b2d2a75fb&type=0&catid=',
     newslist: [],
     windowHeight: 0,
     windowWidth: 0,
-    page: 0,
     cur: 0,
     imgLoad: '/img/load.png',
     classNote: 'item-',  
     count: 0,
-    isHideLoadMore: 'none',
-    newData: { title: '这是标题', source: 'WPS' }
+    isHideLoadMore: 'none'
 },
 
 onLoad: function () {  // 页面首次载入
-    // this.loadList(this.data.page, this.data.navUrl[this.data.cur], '0');
-    this.loadList(this.data.page, url, '0');
+    this.loadList( '0');
     wx.getSystemInfo({
         success: (res) => {
             this.setData({
@@ -47,9 +41,9 @@ onLoad: function () {  // 页面首次载入
 
 onReady: function() {
     this.setData({
-        count: 10
+        count: 5
     })
-    this.showImg();
+    // this.layLoad();
 },
 
 onPullDownRefresh:  () => {  // 下拉事件
@@ -70,110 +64,58 @@ onPullDownRefresh:  () => {  // 下拉事件
 
 onReachBottom: function () {  // 上拉事件
     this.setData({
-    isHideLoadMore: 'block'
+        isHideLoadMore: 'block'
     })
-    this.data.page++
-    // this.loadList(this.data.page, this.data.navUrl[this.data.cur], '0')
-    this.loadList(this.data.page, url, '0')
+    // console.log('上拉事件')
+    this.loadList( '0')
 },
 
-loadList: function (page, url, repaint) {
+loadList: function ( repaint) {
     var that = this;
-    var page = page + 1;
-    page = ( ( page * 10) - 10 + '-' + (page * 10) ) +'.html';
-    // var url = url+page;
-    // console.log(url)
+    var url = that.data.url + that.data.navData[that.data.cur].catid;
     wx.request({
-    url: url,
-    method: 'get',
-    success: (res) => {
-        // var data = res.data;
-        var data = JSON.parse(res.data); //本地环境
-        var dataArr = (repaint==='1'?[]:that.data.newslist);
-        for (var item in data) { 
-        that.setData({
-            newslist: dataArr.concat(data[item])
-        })
+        url: url,
+        method: 'get',
+        success: (res) => {
+            var data = res.data.data.news;
+            var dataArr = (repaint==='1'?[]:that.data.newslist);
+                that.setData({
+                    newslist: dataArr.concat(data)
+                })
+            that.setData({
+                isHideLoadMore: 'none'
+            })
+        },
+        fail: () =>{
+            wx.showToast({
+            icon: 'none',
+            title: '当前网络异常，请稍后再试',
+            duration: 2000,
+            mask: true
+            });
         }
-        that.data.newslist.forEach((e)=>{
-            e.imgShow = false;
-        })
-        that.setData({
-            isHideLoadMore: 'block'
-        })
-    },
-    fail: () =>{
-        wx.showToast({
-        icon: 'none',
-        title: '当前网络异常，请稍后再试',
-        duration: 2000,
-        mask: true
-        });
-    }
     });
-    // this.showImg()
 },
 
 onMyEvent: function (e) {
-    this.data.page = 0;
+    this.data.count = 10;
     this.data.cur = e.detail.cur;
-    // this.loadList(this.data.page, this.data.navUrl[this.data.cur], '1')
-    this.loadList(this.data.page, url, '1')
+    this.loadList( '1')
+    wx.pageScrollTo({
+        scrollTop: 0,
+        duration: 300
+    })
+    this.loadList( '1')
 },
 
-//version one
-// showImg(){
-//     var that = this
-//     var newslist = that.data.newslist // 获取图片数组数据
-    
-//     for (let i in that.data.newslist){
-//         wx.createIntersectionObserver().relativeToViewport().observe('.img' + i, (ret) => {
-//             console.log(132)
-//             if (ret.intersectionRatio > 0) {
-//                 newslist[i].imgShow = true
-//             }
-//             // var arr = newslist
-//             that.setData({
-//                 newslist
-//             })
-//         })
-//     }
-// }
-
-// showImg() {
-//         var that = this
-//         var newslist = that.data.newslist // 获取图片数组数据
-//         var oldCount = this.data.count
-
-//         for (let i in that.data.newslist) {
-//             wx.createIntersectionObserver().relativeToViewport().observe('.item-' + oldCount, (ret) => {
-//                 console.log(132)
-//                 if (ret.intersectionRatio > 0) {
-//                     that.setData({
-//                         count: that.data.count + 10
-//                     })
-//                 } 
-//                 that.showImg();
-//             })
-//         }
-//     }
-
-    showImg() {
+    layLoad() {
         var that = this;
-        // var intersectionObserver = wx.createIntersectionObserver();
-        //这里bottom：100，是指显示区域以下 100px 时，就会触发回调函数。
-        for(let i in that.data.newslist){
-            wx.createIntersectionObserver().relativeToViewport().observe('.item-' + this.data.count, (res) => {
-                console.log(123)
-                if (res.boundingClientRect.top > 0) {
-                    // intersectionObserver.disconnect()
-                    that.setData({
-                        count: that.data.count + 10
-                    })
-                    that.showImg();
-                }
+        wx.createIntersectionObserver().relativeToViewport({ bottom: 100 }).observe('.' + that.data.classNote + (that.data.count-1), (res) => {
+            wx.createIntersectionObserver().disconnect()
+            that.setData({
+                count: that.data.count + 5
             })
-        }   
+            that.layLoad();
+        }) 
     }
-
 })
