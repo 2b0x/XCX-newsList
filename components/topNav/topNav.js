@@ -1,12 +1,14 @@
 Component({
   properties: {
-    navData: Array
+    navData: Array,
+    navCur: Number
   },
   data: {
     currentTab: 0,
     navScrollLeft: 0
   },
   attached: function () {
+    console.log(this.data.navCur)
     wx.getSystemInfo({
       success: (res) => {
         this.setData({
@@ -35,6 +37,14 @@ Component({
       }
       //向父组件传值
       this.triggerEvent('myevent',{cur: cur})
+    },
+    showDemo() {
+        console.log('im topNav components');
+        var singleNavWidth = this.data.windowWidth / 5;
+        this.setData({
+            navScrollLeft: (3 - 2) * singleNavWidth,
+            currentTab: 3
+        })
     }
   }
  

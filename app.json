@@ -5,12 +5,14 @@
     "pages/logs/logs",
     "components/topNav/topNav",
     "pages/detail/detail"
+    
   ],
   "window": {
-    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#D60935",
     "navigationBarTitleText": "WPS资讯",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F0F0F0",
+    "backgroundTextStyle": "dark "
   },
   "tabBar": {
     "selectedColor": "#CA1A03",

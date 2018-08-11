@@ -1,15 +1,17 @@
-<!--index.wxml-->
 <view class="container">
-    <topNav bindmyevent="onMyEvent" navData="{{navData}}"></topNav>
-    <view class='itemBox'>
+    <topNav id="topNav" bindmyevent="onMyEvent" navData="{{navData}}" navCur="{{}}"></topNav>
+
+    <view class="wrapper wp-l" style='left:{{wpL}};display:{{wpShow}}'>
+        <image src='../../img/newlogo.png' mode="aspectFit"></image>
+    </view>
+
+    <view class='itemBox' bindtouchstart="touchStart" bindtouchend="touchEnd">
         <block wx:for="{{newslist}}" wx:key="{{index}}" >
             <view class="item-{{index}}" wx:if="{{item.img.length>1}}">
                 <navigator class='item type01' url="../detail/detail?url={{item.url}}">
                     <text class='title mar-b-15'>{{item.title}}</text>
                     <view class='imgBox'>
-                        <!-- <image data-src="{{item.title}}" src="{{item['imgShow'] ? ite['imgsrc'] : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.imgextra}}" class="{{'img'+index}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>              -->
-                        <!-- <image lazy-load="true" src="{{index < count ? ite : imgLoad}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image> -->
-                        <image src="{{ite}}" lazy-load wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>  
+                        <image src="{{ite}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>  
                     </view>
                     <text class='from'>{{item.from}}</text>
                 </navigator>
@@ -18,12 +20,10 @@
             <view class="item-{{index}}" wx:if="{{item.img.length==1}}">
                 <navigator class='item type02' url="../detail/detail?url={{item.url}}">
                     <view class='lf pic'>
-                        <!-- <image data-src="{{item['imgShow']}}" src="{{item['imgShow'] ? item['imgsrc'] : imgLoad}}" class="{{'img'+index}}"></image> -->
-                        <!-- <image src="{{index < count ? item['img'][0] : imgLoad}}" class="{{'img'+index}}" lazy-load="true"></image> -->
-                        <image src="{{item['img'][0]}}" class="{{'img'+index}}" lazy-load></image>
+                        <image src="{{item['img'][0]}}" class="{{'img'+index}}"></image>
                     </view>
                     <view class='lf info'>
-                        <view><text class='title' bindtap='console'>{{item.title}}</text></view>
+                        <view><text class='title'>{{item.title}}</text></view>
                         <view><text class='from'>{{item.from}}</text></view>
                     </view>
                 </navigator>
@@ -31,27 +31,14 @@
         </block>
     </view>
 
-    <!-- <view class='item type02'>
-        <view class='lf img'>
-          <image src="{{item.imgsrc}}" mode='aspectFill'></image>
-        </view>
-        <view class='lf info'>
-          <view><text class='title' bindtap='console'>这是标题</text></view>
-          <view><text class='from'>WPS</text></view>
-        </view>
-    </view>
-    <view class='item type02'>
-        <view class='lf img'>
-          <image src="{{item.imgsrc}}" mode='aspectFill'></image>
-        </view>
-        <view class='lf info'>
-          <view><text class='title' bindtap='console'>这是标题</text></view>
-          <view><text class='from'>WPS</text></view>
-        </view>
-    </view> -->
-
     <view class='load' style="display:{{isHideLoadMore}}">
       <load></load>
     </view>
     
+    <view class="wrapper wp-r" style='right:{{wpR}};display:{{wpShow}}'> 
+        <image src='../../img/newlogo.png' mode="aspectFit"></image>
+    </view>
+
+    <view bindtap='demo' style='position:fixed;bottom:20rpx;display:inline-block;background:#D60935;color:white;padding:10rpx;z-index:3;'>click me</view>
+
 </view>

@@ -6,16 +6,20 @@ Page({
   },
 
   onLoad: function (options) {
-    var url = options.url
-    // console.log(url)
+    var targetUrl = options.url
+      console.log(targetUrl)
     var urls = 'http://10.13.144.3/aritice.php'
     var that = this
     wx.request({
-      url: urls,
-      // .match(/<div.*?id="endText".*?>(.*?)<\/div>/)
+      url: urls,  
+      data: {
+          targetUrl: targetUrl
+      },
+      method: 'GET',
       success: function (res) {
         var article = res.data
-        // console.log(article)
+
+        // console.log(res)
         WxParse.wxParse('article', 'html', article, that, 5);
       },
       fail: function () {}

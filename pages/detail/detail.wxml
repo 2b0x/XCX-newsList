@@ -1,2 +1,3 @@
 <import src="../../wxParse/wxParse.wxml"/>
 <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+<!-- <web-view src="http://10.13.144.3/aritice.php"></web-view> -->
