@@ -1,6 +1,9 @@
 var time = 0;
+var times = 11;
+var cutTime = 0;
 var touchDot = 0;//触摸时的原点
 var interval = "";
+var countInterval = "";
 var flag_hd = true;
 
 Page({
@@ -27,8 +30,8 @@ Page({
         wpL: '-100%',
         wpR: '-100%',
         wpShow: 'block',
-        // windowHeight: 0,
-        // windowWidth: 0,
+        windowHeight: 0,
+        windowWidth: 0,
         cur: 0,
         // imgLoad: '/img/load.png',
         // classNote: 'item-',
@@ -37,14 +40,14 @@ Page({
     },
 
     onLoad: function() {
-        // wx.getSystemInfo({
-        //     success: (res) => {
-        //         this.setData({
-        //             windowHeight: res.windowHeight,
-        //             windowWidth: res.windowWidth
-        //         })
-        //     }
-        // })  
+        wx.getSystemInfo({
+            success: (res) => {
+                this.setData({
+                    windowHeight: res.windowHeight,
+                    windowWidth: res.windowWidth
+                })
+            }
+        })  
     },
 
     onReady: function() {
@@ -88,55 +91,66 @@ Page({
     loadList: function(repaint, callback) {
         var that = this;
         var url = that.data.url + that.data.navData[that.data.cur].catid;
-        // wx.request({
-        //     url: url,
-        //     method: 'get',
-        //     success: function(res) {
-        //         console.log(res);
-        //         var status = res.data.result;
-        //         console.log(res.data.result)
-        //         if(status==='ok'){
-        //             // 无记录加载
-        //             // var dataArr = (repaint==='1'?[]:that.data.newslist);
-        //             // that.setData({
-        //             //     newslist: dataArr.concat(data)
-        //             // })
+        var StorageData = 'newslist' + that.data.cur;
+        console.log(StorageData)
+        if (wx.getStorageSync(StorageData)){
+            newslist: wx.getStorageSync(StorageData)
+            console.log(wx.getStorageSync(StorageData))
+        }else{
+            console.log('no');
+            wx.request({
+                url: url,
+                method: 'get',
+                success: function(res) {
+                    // console.log(res);
+                    var status = res.data.result;
+                    // console.log(res.data.result)
+                    if(status==='ok'){
+                        // 无记录加载
+                        // var dataArr = (repaint==='1'?[]:that.data.newslist);
+                        // that.setData({
+                        //     newslist: dataArr.concat(data)
+                        // })
 
-        //             var data = res.data.data.news;
-        //             // 记录加载
-        //             var dataArr = that.data.newslist;
-        //             if (repaint === 'addMore') {
-        //                 that.setData({
-        //                     newslist: dataArr.concat(data)
-        //                 })
-        //             } else if (repaint === 'refresh') {
-        //                 that.data.listCache[that.data.cur] = data;
-        //                 that.setData({
-        //                     newslist: data.concat(dataArr)
-        //                 })
-        //             } else if (repaint === 'switch') {
-        //                 that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
-        //                 that.setData({
-        //                     newslist: that.data.listCache[that.data.cur]
-        //                 })
-        //             }
-        //             that.setData({
-        //                 isHideLoadMore: 'none'
-        //             })
-        //         }else{
-        //             console.log('data load error')
-        //         }              
-                
-        //     },
-        //     fail: () => {
-        //         wx.showToast({
-        //             icon: 'none',
-        //             title: '当前网络异常，请稍后再试',
-        //             duration: 2000,
-        //             mask: true
-        //         });
-        //     }
-        // });
+                        var data = res.data.data.news;
+                        // 记录加载
+                        var dataArr = that.data.newslist;
+                        if (repaint === 'addMore') {
+                            that.setData({
+                                newslist: dataArr.concat(data)
+                            })
+                        } else if (repaint === 'refresh') {
+                            that.data.listCache[that.data.cur] = data;
+                            that.setData({
+                                newslist: data.concat(dataArr)
+                            })
+                        } else if (repaint === 'switch') {
+                            that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
+                            that.setData({
+                                newslist: that.data.listCache[that.data.cur]
+                            })
+                        }
+                        that.setData({
+                            isHideLoadMore: 'none'
+                        })
+                    }else{
+                        console.log('data load error')
+                    }              
+                    
+                },
+                fail: () => {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '当前网络异常，请稍后再试',
+                        duration: 2000,
+                        mask: true
+                    });
+                    that.setData({
+                        isHideLoadMore: 'none'
+                    })
+                }
+            });
+        }
         callback = callback || function() {};
         callback();
     },
@@ -148,6 +162,15 @@ Page({
             duration: 300
         })
         this.loadList('switch')
+    },
+
+    // 模拟页面加载函数
+    mockLoad: function (callback) {
+        console.log('模拟页面加载函数')
+
+
+        callback = callback || function () { };
+        callback();
     },
 
     wpLeftShow:function() {
@@ -162,13 +185,13 @@ Page({
                 wpShow: 'none',
                 wpL: '-100%'
             })
-        },1000)
+        },1500)
         setTimeout(function () {
             that.setData({
                 wpShow: 'block'
             })
             flag_hd = true;            
-        }, 1500)
+        }, 1550)
     },
 
     wpRightShow: function () {
@@ -178,44 +201,77 @@ Page({
             wpShow: 'block',
             wpR: '0px'
         })
+
+        //加载页面 
+
         setTimeout(function () {
             that.setData({
                 wpShow: 'none',
                 wpR: '-100%'
             })
-        }, 1000)
+        }, 1500)
         setTimeout(function () {
             that.setData({
                 wpShow: 'block'
             })
             flag_hd = true;            
-        }, 1500)
+        }, 1510)
     },
 
     touchStart: function (e) {
+        // console.log(123)
+        var that = this;
         touchDot = e.touches[0].pageX; // 获取触摸时的原点
         // 使用js计时器记录时间    
         interval = setInterval(function () {
             time++;
         }, 100);
+        // console.log(times);
+        clearInterval(countInterval);
+        // if(times<=10 && times>3){
+        //     flag_hd = true;
+        //     setTimeout(function () {
+        //         that.setData({
+        //             wpShow: 'none',
+        //             wpR: '-100%'
+        //         })
+        //     }, 800)
+        //     setTimeout(function () {
+        //         that.setData({
+        //             wpShow: 'block'
+        //         })
+               
+        //     }, 850)
+        //     console.log('new')
+        // }
+        cutTime = times;
+        times = 0;
+        
     },
+
     // 触摸结束事件
     touchEnd: function (e) {
+        console.log(cutTime);
+        
         var touchMove = e.changedTouches[0].pageX;
         // 向左滑动   
         if (touchMove - touchDot <= -50 && time < 10 && flag_hd == true) {
             flag_hd = false;
             //执行切换页面的方法
-            console.log("向左滑动");
+            // console.log("向左滑动");
             this.wpRightShow();
         }
         // 向右滑动   
         if (touchMove - touchDot >= 50 && time < 10 && flag_hd == true) {
             flag_hd = false;
             //执行切换页面的方法
-            console.log("向右滑动");
+            // console.log("向右滑动");
             this.wpLeftShow();
         }
+        countInterval = setInterval(function () {
+            times++;
+        }, 100);
+        cutTime = 0;
         clearInterval(interval); // 清除setInterval
         time = 0;
     }

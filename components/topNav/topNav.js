@@ -8,7 +8,7 @@ Component({
     navScrollLeft: 0
   },
   attached: function () {
-    console.log(this.data.navCur)
+    // console.log(this.data.navCur)
     wx.getSystemInfo({
       success: (res) => {
         this.setData({
@@ -39,7 +39,7 @@ Component({
       this.triggerEvent('myevent',{cur: cur})
     },
     showDemo() {
-        console.log('im topNav components');
+        // console.log('im topNav components');
         var singleNavWidth = this.data.windowWidth / 5;
         this.setData({
             navScrollLeft: (3 - 2) * singleNavWidth,

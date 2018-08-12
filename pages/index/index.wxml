@@ -1,17 +1,17 @@
 <view class="container">
     <topNav id="topNav" bindmyevent="onMyEvent" navData="{{navData}}" navCur="{{}}"></topNav>
 
-    <view class="wrapper wp-l" style='left:{{wpL}};display:{{wpShow}}'>
+    <view class="wrapper wp-l" style='left:{{wpL}};display:{{wpShow}}' bindtouchstart="touchStart" bindtouchend="touchEnd">
         <image src='../../img/newlogo.png' mode="aspectFit"></image>
     </view>
 
-    <view class='itemBox' bindtouchstart="touchStart" bindtouchend="touchEnd">
+    <view class='itemBox'  bindtouchstart="touchStart" bindtouchend="touchEnd"  style="min-height:{{windowHeight+'px'}}">
         <block wx:for="{{newslist}}" wx:key="{{index}}" >
             <view class="item-{{index}}" wx:if="{{item.img.length>1}}">
                 <navigator class='item type01' url="../detail/detail?url={{item.url}}">
                     <text class='title mar-b-15'>{{item.title}}</text>
                     <view class='imgBox'>
-                        <image src="{{ite}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" mode="aspectFill"></image>  
+                        <image src="{{ite}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" wx:if="{{idx<3}}" mode="aspectFill"></image>  
                     </view>
                     <text class='from'>{{item.from}}</text>
                 </navigator>

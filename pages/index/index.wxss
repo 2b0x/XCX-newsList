@@ -16,7 +16,7 @@ topNav{
     position:fixed;
     padding-top:80rpx;
     background-color: #FFFFFF;
-    transition: all .5s;
+    transition: all .3s;
     z-index: 2;
     text-align:center;
 }
@@ -44,14 +44,15 @@ topNav{
   border-bottom:1px solid #dddddd;
   padding:35rpx 25rpx;
 }
-.itemBox{
+/* .itemBox{
     height:100%;
     position:fixed;
     left:0;
     top:0;
     width:100%;
     padding-top:80rpx;
-}
+    overflow-y: auto;
+} */
 .itemBox:nth-child(-2) .item{
   border: none;
 }
