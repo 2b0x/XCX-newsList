@@ -91,66 +91,74 @@ Page({
     loadList: function(repaint, callback) {
         var that = this;
         var url = that.data.url + that.data.navData[that.data.cur].catid;
-        var StorageData = 'newslist' + that.data.cur;
-        console.log(StorageData)
-        if (wx.getStorageSync(StorageData)){
-            newslist: wx.getStorageSync(StorageData)
-            console.log(wx.getStorageSync(StorageData))
-        }else{
-            console.log('no');
-            wx.request({
-                url: url,
-                method: 'get',
-                success: function(res) {
-                    // console.log(res);
-                    var status = res.data.result;
-                    // console.log(res.data.result)
-                    if(status==='ok'){
-                        // 无记录加载
-                        // var dataArr = (repaint==='1'?[]:that.data.newslist);
-                        // that.setData({
-                        //     newslist: dataArr.concat(data)
-                        // })
+        var StorageDataCur = 'newslist' + that.data.cur;
+        console.log(StorageDataCur);
+        var StorageData = wx.getStorageSync(StorageDataCur);
+        // console.log(StorageData);
+        wx.request({
+            url: url,
+            method: 'get',
+            success: function(res) {
+                // console.log(res);
+                var status = res.data.result;
+                // console.log(res.data.result)
+                if(status==='ok'){
+                    // 无记录加载
+                    // var dataArr = (repaint==='1'?[]:that.data.newslist);
+                    // that.setData({
+                    //     newslist: dataArr.concat(data)
+                    // })
 
-                        var data = res.data.data.news;
-                        // 记录加载
-                        var dataArr = that.data.newslist;
-                        if (repaint === 'addMore') {
+                    var data = res.data.data.news;
+                    // 记录加载
+                    var dataArr = that.data.newslist;
+                    if (repaint === 'addMore') {
+                        that.setData({
+                            newslist: dataArr.concat(data)
+                        })
+                    } else if (repaint === 'refresh') {
+                        wx.setStorageSync(StorageDataCur, data)
+                        // that.data.listCache[that.data.cur] = data;
+                        that.setData({
+                            newslist: data.concat(dataArr)
+                        })
+                    } else if (repaint === 'switch') {
+                        if (StorageData){
                             that.setData({
-                                newslist: dataArr.concat(data)
+                                newslist: StorageData
                             })
-                        } else if (repaint === 'refresh') {
-                            that.data.listCache[that.data.cur] = data;
+                        }else{
+                            wx.setStorageSync(StorageDataCur, data)
                             that.setData({
-                                newslist: data.concat(dataArr)
-                            })
-                        } else if (repaint === 'switch') {
-                            that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
-                            that.setData({
-                                newslist: that.data.listCache[that.data.cur]
+                                newslist: data
                             })
                         }
-                        that.setData({
-                            isHideLoadMore: 'none'
-                        })
-                    }else{
-                        console.log('data load error')
-                    }              
-                    
-                },
-                fail: () => {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '当前网络异常，请稍后再试',
-                        duration: 2000,
-                        mask: true
-                    });
+                        that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
+                        // that.setData({
+                        //     newslist: that.data.listCache[that.data.cur]
+                        // })
+                    }
                     that.setData({
                         isHideLoadMore: 'none'
                     })
-                }
-            });
-        }
+                }else{
+                    console.log('data load error')
+                }              
+                
+            },
+            fail: () => {
+                wx.showToast({
+                    icon: 'none',
+                    title: '当前网络异常，请稍后再试',
+                    duration: 2000,
+                    mask: true
+                });
+                that.setData({
+                    isHideLoadMore: 'none'
+                })
+            }
+        });
+        
         callback = callback || function() {};
         callback();
     },
