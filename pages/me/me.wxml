@@ -1,0 +1,13 @@
+<view class="container">
+    <view class='header'>
+        <!-- <image class='bg' src='../../img/flower.png' mode="	aspectFill"></image> -->
+        <image class='photo'></image>
+        <view class='info'>
+            <text class='userName'>这是用户名</text>
+            <view class='vip'>
+                <image src='../../img/vip.png'></image>
+                <text>开通会员</text>
+            </view>
+        </view>
+    </view>
+</view>

@@ -1,7 +1,7 @@
 Component({
   properties: {
     navData: Array,
-    navCur: Number
+    cur: Number
   },
   data: {
     currentTab: 0,
@@ -42,8 +42,8 @@ Component({
         // console.log('im topNav components');
         var singleNavWidth = this.data.windowWidth / 5;
         this.setData({
-            navScrollLeft: (3 - 2) * singleNavWidth,
-            currentTab: 3
+            navScrollLeft: (this.data.cur - 2) * singleNavWidth,
+            currentTab: this.data.cur
         })
     }
   }

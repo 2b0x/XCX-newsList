@@ -1,10 +1,8 @@
 var time = 0;
-var times = 11;
-var cutTime = 0;
 var touchDot = 0;//触摸时的原点
 var interval = "";
-var countInterval = "";
 var flag_hd = true;
+var loadingTime = "";
 
 Page({
     data: {
@@ -26,16 +24,14 @@ Page({
         url: 'http://feed.mini.wps.cn/feed/v1/news?hdid=78ae09ead772825aa5a4d86b2d2a75fb&type=0&catid=',
         newslist: [],
         listCache: [],
-        navCur: 0,
+        // navCur: 0,
         wpL: '-100%',
         wpR: '-100%',
-        wpShow: 'block',
+        wpLShow: 'block',
+        wpRShow: 'block',
         windowHeight: 0,
         windowWidth: 0,
         cur: 0,
-        // imgLoad: '/img/load.png',
-        // classNote: 'item-',
-        // count: 0,
         isHideLoadMore: 'none'
     },
 
@@ -52,10 +48,6 @@ Page({
 
     onReady: function() {
         this.loadList('switch');
-        // this.setData({
-        //     count: 5
-        // })
-        // this.layLoad();
     },
 
     onPullDownRefresh: function() {
@@ -83,8 +75,8 @@ Page({
     },
 
     onShow: function () {
-        flag_hd = true;    //重新进入页面之后，可以再次执行滑动切换页面代码
-        clearInterval(interval); // 清除setInterval
+        flag_hd = true;
+        clearInterval(interval);
         time = 0;
     },
 
@@ -92,16 +84,12 @@ Page({
         var that = this;
         var url = that.data.url + that.data.navData[that.data.cur].catid;
         var StorageDataCur = 'newslist' + that.data.cur;
-        console.log(StorageDataCur);
         var StorageData = wx.getStorageSync(StorageDataCur);
-        // console.log(StorageData);
         wx.request({
             url: url,
             method: 'get',
             success: function(res) {
-                // console.log(res);
                 var status = res.data.result;
-                // console.log(res.data.result)
                 if(status==='ok'){
                     // 无记录加载
                     // var dataArr = (repaint==='1'?[]:that.data.newslist);
@@ -118,7 +106,6 @@ Page({
                         })
                     } else if (repaint === 'refresh') {
                         wx.setStorageSync(StorageDataCur, data)
-                        // that.data.listCache[that.data.cur] = data;
                         that.setData({
                             newslist: data.concat(dataArr)
                         })
@@ -134,9 +121,6 @@ Page({
                             })
                         }
                         that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
-                        // that.setData({
-                        //     newslist: that.data.listCache[that.data.cur]
-                        // })
                     }
                     that.setData({
                         isHideLoadMore: 'none'
@@ -172,127 +156,121 @@ Page({
         this.loadList('switch')
     },
 
-    // 模拟页面加载函数
-    mockLoad: function (callback) {
-        console.log('模拟页面加载函数')
-
-
-        callback = callback || function () { };
-        callback();
-    },
-
-    wpLeftShow:function() {
+    wpLeftShow: function (hiddenTime) {
         var that = this;
+        var hiddenTime = hiddenTime;
         this.selectComponent('#topNav').showDemo();
         this.setData({
-            wpShow: 'block',
+            wpLShow: 'block',
             wpL: '0px'
-        })
-        setTimeout(function(){
-            that.setData({
-                wpShow: 'none',
-                wpL: '-100%'
-            })
-        },1500)
-        setTimeout(function () {
-            that.setData({
-                wpShow: 'block'
-            })
-            flag_hd = true;            
-        }, 1550)
+        })  
+        this.loadList 
     },
 
-    wpRightShow: function () {
+    wpRightShow: function (hiddenTime) {
         var that = this;
+        var hiddenTime = hiddenTime;
         this.selectComponent('#topNav').showDemo();
         this.setData({
-            wpShow: 'block',
+            wpRShow: 'block',
             wpR: '0px'
         })
+    },
 
-        //加载页面 
-
-        setTimeout(function () {
+    wpLeftHidden: function(){
+        var that = this;
+        clearTimeout(loadingTime)
+        loadingTime = setTimeout(function(){
             that.setData({
-                wpShow: 'none',
+                wpLShow: 'none',
+                wpL: '-100%'
+            })
+            setTimeout(function () {
+                that.setData({
+                    wpLShow: 'block'
+                })
+                flag_hd = true;
+            }, 50) 
+            that.loadList('switch')
+        },1000)
+    },
+
+    wpRightHidden: function () {
+        var that = this;
+        clearTimeout(loadingTime)
+        loadingTime = setTimeout(function () {
+            that.setData({
+                wpRShow: 'none',
                 wpR: '-100%'
             })
-        }, 1500)
-        setTimeout(function () {
-            that.setData({
-                wpShow: 'block'
-            })
-            flag_hd = true;            
-        }, 1510)
+            setTimeout(function () {
+                that.setData({
+                    wpRShow: 'block'
+                })
+                flag_hd = true;
+            }, 50)
+            that.loadList('switch')
+        }, 1000)
     },
 
     touchStart: function (e) {
-        // console.log(123)
         var that = this;
-        touchDot = e.touches[0].pageX; // 获取触摸时的原点
-        // 使用js计时器记录时间    
+        touchDot = e.touches[0].pageX;
+        that.setData({
+            wpLShow: 'none',
+            wpRShow: 'none'
+            
+        })
+        flag_hd = true; 
+        setTimeout(function () {
+            that.setData({
+                wpLShow: 'block',
+                wpRShow: 'block',
+                wpL: '-100%',
+                wpR: '-100%'
+            })             
+        }, 50)  
         interval = setInterval(function () {
             time++;
-        }, 100);
-        // console.log(times);
-        clearInterval(countInterval);
-        // if(times<=10 && times>3){
-        //     flag_hd = true;
-        //     setTimeout(function () {
-        //         that.setData({
-        //             wpShow: 'none',
-        //             wpR: '-100%'
-        //         })
-        //     }, 800)
-        //     setTimeout(function () {
-        //         that.setData({
-        //             wpShow: 'block'
-        //         })
-               
-        //     }, 850)
-        //     console.log('new')
-        // }
-        cutTime = times;
-        times = 0;
-        
+        }, 100);   
     },
 
-    // 触摸结束事件
     touchEnd: function (e) {
-        console.log(cutTime);
-        
+        var that = this;
         var touchMove = e.changedTouches[0].pageX;
-        // 向左滑动   
         if (touchMove - touchDot <= -50 && time < 10 && flag_hd == true) {
             flag_hd = false;
-            //执行切换页面的方法
             // console.log("向左滑动");
-            this.wpRightShow();
-        }
-        // 向右滑动   
+            var cur = that.data.cur
+            if(cur==(that.data.navData.length)-1){
+                console.log('已经到尽头')
+            }else{
+                that.setData({
+                    cur: cur + 1,
+                    newslist: []
+                })
+                that.wpRightShow(500);
+                that.wpRightHidden();
+            }
+           
+        } 
         if (touchMove - touchDot >= 50 && time < 10 && flag_hd == true) {
             flag_hd = false;
-            //执行切换页面的方法
             // console.log("向右滑动");
-            this.wpLeftShow();
+            var cur = that.data.cur
+            if(cur==0){
+                console.log('已经到尽头')
+            }else{
+                that.setData({
+                    cur: cur - 1,
+                    newslist: []
+                })
+                that.wpLeftShow(500);
+                that.wpLeftHidden();
+            }
+            
         }
-        countInterval = setInterval(function () {
-            times++;
-        }, 100);
-        cutTime = 0;
-        clearInterval(interval); // 清除setInterval
+        clearInterval(interval);
         time = 0;
     }
-
-
-    // layLoad() {
-    //     var that = this;
-    //     wx.createIntersectionObserver().relativeToViewport({ bottom: 100 }).observe('.' + that.data.classNote + (that.data.count-1), (res) => {
-    //         wx.createIntersectionObserver().disconnect()
-    //         that.setData({
-    //             count: that.data.count + 5
-    //         })
-    //         that.layLoad();
-    //     }) 
-    // }
 })

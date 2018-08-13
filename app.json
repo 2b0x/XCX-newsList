@@ -1,7 +1,7 @@
 {
   "pages": [
+    "pages/me/me",
     "pages/index/index",
-    "pages/nav/nav",
     "pages/logs/logs",
     "components/topNav/topNav",
     "pages/detail/detail"
@@ -25,8 +25,8 @@
         "selectedIconPath": "img/index_act.png"
       },
       {
-        "pagePath": "pages/nav/nav",
-        "text": "更多",
+        "pagePath": "pages/me/me",
+        "text": "我的",
         "iconPath": "img/dujia.png",
         "selectedIconPath": "img/dujia_act.png"
       }

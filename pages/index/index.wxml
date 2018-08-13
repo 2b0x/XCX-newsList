@@ -1,7 +1,7 @@
 <view class="container">
-    <topNav id="topNav" bindmyevent="onMyEvent" navData="{{navData}}" navCur="{{}}"></topNav>
+    <topNav id="topNav" bindmyevent="onMyEvent" navData="{{navData}}" cur="{{cur}}"></topNav>
 
-    <view class="wrapper wp-l" style='left:{{wpL}};display:{{wpShow}}' bindtouchstart="touchStart" bindtouchend="touchEnd">
+    <view class="wrapper wp-l" style='left:{{wpL}};display:{{wpLShow}}' bindtouchstart="touchStart" bindtouchend="touchEnd">
         <image src='../../img/newlogo.png' mode="aspectFit"></image>
     </view>
 
@@ -27,18 +27,17 @@
                         <view><text class='from'>{{item.from}}</text></view>
                     </view>
                 </navigator>
+                
             </view>
         </block>
+        <view class='load' style="display:{{isHideLoadMore}}">
+            <load></load>
+        </view>
     </view>
 
-    <view class='load' style="display:{{isHideLoadMore}}">
-      <load></load>
-    </view>
+   
     
-    <view class="wrapper wp-r" style='right:{{wpR}};display:{{wpShow}}'> 
+    <view class="wrapper wp-r" style='right:{{wpR}};display:{{wpRShow}}' bindtouchstart="touchStart" bindtouchend="touchEnd"> 
         <image src='../../img/newlogo.png' mode="aspectFit"></image>
     </view>
-
-    <view bindtap='demo' style='position:fixed;bottom:20rpx;display:inline-block;background:#D60935;color:white;padding:10rpx;z-index:3;'>click me</view>
-
 </view>
