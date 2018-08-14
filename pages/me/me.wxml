@@ -1,13 +1,55 @@
 <view class="container">
     <view class='header'>
         <!-- <image class='bg' src='../../img/flower.png' mode="	aspectFill"></image> -->
-        <image class='photo'></image>
+        <image class='photo' src='{{userPic}}'></image>
         <view class='info'>
-            <text class='userName'>这是用户名</text>
+            <text class='userName'>{{userName}}</text>
             <view class='vip'>
                 <image src='../../img/vip.png'></image>
                 <text>开通会员</text>
             </view>
         </view>
     </view>
+
+    <view class='sign-box defalut-box'>
+        <view class='sign-in'>
+            <!-- <button class='sign-btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo">立即签到</button> -->
+            <button class='sign-btn' bindtap="showSign">立即签到</button>
+            <view class='sign-record'>
+                <view wx:for="{{sign}}" wx:key="{{index}}">
+                    <image src="{{sign[index] ? '../../img/blue.png' : '../../img/gray.png' }}"></image>
+                    <text>{{week[index]}}</text>
+                </view>
+                
+            </view>
+            <view class='rules'>活动规则</view>
+        </view>
+    </view>
+
+    <view class='myPrize defalut-box'>
+        <view class='prize-header'>
+            <text class='prize-title'>我的奖品</text>
+            <text class='prize-more'>领奖记录＞</text>
+        </view>
+        <view class='prize-list'>
+            <text>暂无记录，快去签到领取奖品吧！</text>
+        </view>
+    </view>
+
+    <view class='sign-success fillScrn' style="z-index:{{signToggle ? '1' : '-1'}};">
+        <view class='success-box' style="top:{{signToggle ? '0px' : '-100%'}};transition:{{signToggle?'all .3s':'none'}}">
+            <image class='success-bg' src='../../img/sign_success.png' mode='aspectFit'></image>
+            <view class='success-title'>
+                <view class='success-day'><text>您已连续签到2天</text></view>
+                <view class='success-num'><text>恭喜获得2次抽奖机会</text></view>
+                 <view class='lottery'><text>马上抽奖</text></view>
+            </view>
+            <view class='success-close' bindtap='showSign'>
+                <image src='../../img/close.png'></image>
+            </view>
+             
+        </view>    
+        <view class='success-mask fillScrn' style="opacity:{{signToggle ? '1' : '0'}};"></view>
+    </view>
+
 </view>
