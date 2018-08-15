@@ -1,35 +1,36 @@
 {
-  "pages": [
-    "pages/me/me",
-    "pages/index/index",
-    "pages/logs/logs",
-    "components/topNav/topNav",
-    "pages/detail/detail"
-    
-  ],
-  "window": {
-    "navigationBarBackgroundColor": "#D60935",
-    "navigationBarTitleText": "WPS资讯",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#F0F0F0",
-    "backgroundTextStyle": "dark "
-  },
-  "tabBar": {
-    "selectedColor": "#CA1A03",
-    "color": "black",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "img/index.png",
-        "selectedIconPath": "img/index_act.png"
-      },
-      {
-        "pagePath": "pages/me/me",
-        "text": "我的",
-        "iconPath": "img/dujia.png",
-        "selectedIconPath": "img/dujia_act.png"
-      }
-    ]
-  }
+    "pages": [
+        "pages/me/me",
+        "pages/index/index",
+        "pages/logs/logs",
+        "pages/login/login",
+        "components/topNav/topNav",
+        "pages/detail/detail",
+        "pages/myGift/myGift"
+    ],
+    "window": {
+        "navigationBarBackgroundColor": "#D60935",
+        "navigationBarTitleText": "WPS资讯",
+        "navigationBarTextStyle": "black",
+        "backgroundColor": "#F0F0F0",
+        "backgroundTextStyle": "dark "
+    },
+    "tabBar": {
+        "selectedColor": "#CA1A03",
+        "color": "black",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "img/index.png",
+                "selectedIconPath": "img/index_act.png"
+            },
+            {
+                "pagePath": "pages/me/me",
+                "text": "我的",
+                "iconPath": "img/dujia.png",
+                "selectedIconPath": "img/dujia_act.png"
+            }
+        ]
+    }
 }
