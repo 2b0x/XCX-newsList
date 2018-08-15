@@ -1,1 +1,16 @@
-/* pages/myGift/myGift.wxss */
+page{
+    /* min-height: 100%; */
+    background-color: #EFEFF4;
+}
+.container{
+    /* min-height: 100%; */
+}
+.empty{
+    text-align: center;
+    color: #c0c0c0;
+    margin-top: 300rpx;
+}
+.empty image{
+    height: 200rpx;
+    width: 200rpx;
+}

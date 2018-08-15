@@ -6,7 +6,7 @@ Page({
         week: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
         signToggle: 0,
 
-        userName: '点击登录',
+        userName: 'WPS资讯',
         userPic: '../../img/wps_icon.png'
     },
     //事件处理函数

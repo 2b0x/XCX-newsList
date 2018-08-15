@@ -29,7 +29,7 @@
     <view class='myPrize defalut-box'>
         <view class='prize-header'>
             <text class='prize-title'>我的奖品</text>
-            <text class='prize-more'>领奖记录＞</text>
+            <navigator url="../myGift/myGift"  class='prize-more'>领奖记录＞</navigator >
         </view>
         <view class='prize-list'>
             <text>暂无记录，快去签到领取奖品吧！</text>
