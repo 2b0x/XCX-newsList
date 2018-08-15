@@ -1,5 +1,6 @@
 var time = 0;
-var touchDot = 0;//触摸时的原点
+var touchDotX = 0;//触摸时X轴的原点
+var touchDotY = 0;//触摸时y轴的原点
 var interval = "";
 var flag_hd = true;
 var loadingTime = "";
@@ -23,7 +24,7 @@ Page({
         ],
         url: 'http://feed.mini.wps.cn/feed/v1/news?hdid=78ae09ead772825aa5a4d86b2d2a75fb&type=0&catid=',
         newslist: [],
-        listCache: [],
+        // listCache: [],
         // navCur: 0,
         wpL: '-100%',
         wpR: '-100%',
@@ -91,42 +92,57 @@ Page({
             success: function(res) {
                 var status = res.data.result;
                 if(status==='ok'){
-                    // 无记录加载
-                    // var dataArr = (repaint==='1'?[]:that.data.newslist);
-                    // that.setData({
-                    //     newslist: dataArr.concat(data)
-                    // })
-
-                    var data = res.data.data.news;
-                    // 记录加载
-                    var dataArr = that.data.newslist;
-                    if (repaint === 'addMore') {
+                    var total = res.data.data.total;
+                    if(total==0){
+                        wx.showToast({
+                            icon: 'none',
+                            title: '暂无新数据哦~',
+                            duration: 1500,
+                            mask: true
+                        });
                         that.setData({
-                            newslist: dataArr.concat(data)
+                            newslist: StorageData
                         })
-                    } else if (repaint === 'refresh') {
-                        wx.setStorageSync(StorageDataCur, data)
-                        that.setData({
-                            newslist: data.concat(dataArr)
-                        })
-                    } else if (repaint === 'switch') {
-                        if (StorageData){
+                    }else{
+                        var data = res.data.data.news;
+                        // 记录加载
+                        var dataArr = that.data.newslist;
+                        if (repaint === 'addMore') {
                             that.setData({
-                                newslist: StorageData
+                                newslist: dataArr.concat(data)
                             })
-                        }else{
+                        } else if (repaint === 'refresh') {
                             wx.setStorageSync(StorageDataCur, data)
                             that.setData({
-                                newslist: data
+                                newslist: data.concat(dataArr)
                             })
+                        } else if (repaint === 'switch') {
+                            if (StorageData) {
+                                that.setData({
+                                    newslist: StorageData
+                                })
+                            } else {
+                                wx.setStorageSync(StorageDataCur, data)
+                                that.setData({
+                                    newslist: data
+                                })
+                            }
                         }
-                        that.data.listCache[that.data.cur] = that.data.listCache[that.data.cur] || data;
-                    }
+                        that.setData({
+                            isHideLoadMore: 'none'
+                        })
+                    } 
+                }else{
+                    // console.log('data load error')
+                    wx.showToast({
+                        icon: 'none',
+                        title: '等会儿嘛~等会儿再来嘛~',
+                        duration: 2000,
+                        mask: true
+                    });
                     that.setData({
                         isHideLoadMore: 'none'
                     })
-                }else{
-                    console.log('data load error')
                 }              
                 
             },
@@ -164,7 +180,6 @@ Page({
             wpLShow: 'block',
             wpL: '0px'
         })  
-        this.loadList 
     },
 
     wpRightShow: function (hiddenTime) {
@@ -215,7 +230,8 @@ Page({
 
     touchStart: function (e) {
         var that = this;
-        touchDot = e.touches[0].pageX;
+        touchDotX = e.touches[0].pageX;
+        touchDotY = e.touches[0].pageY;
         that.setData({
             wpLShow: 'none',
             wpRShow: 'none'
@@ -237,8 +253,10 @@ Page({
 
     touchEnd: function (e) {
         var that = this;
-        var touchMove = e.changedTouches[0].pageX;
-        if (touchMove - touchDot <= -50 && time < 10 && flag_hd == true) {
+        var touchMoveX = e.changedTouches[0].pageX;
+        var touchMoveY = e.changedTouches[0].pageY;
+        var moveY = Math.abs(touchMoveY - touchDotY);
+        if (touchMoveX - touchDotX <= -50 && time < 10 && moveY < 10 && flag_hd == true) {
             flag_hd = false;
             // console.log("向左滑动");
             var cur = that.data.cur
@@ -254,7 +272,7 @@ Page({
             }
            
         } 
-        if (touchMove - touchDot >= 50 && time < 10 && flag_hd == true) {
+        if (touchMoveX - touchDotX >= 50 && time < 10 && moveY < 10 && flag_hd == true) {
             flag_hd = false;
             // console.log("向右滑动");
             var cur = that.data.cur

@@ -1,0 +1,20 @@
+<!--index.wxml-->
+<view class="container">
+    <view class="lottery-num">
+        抽奖次数：<text class="num">3</text>次
+    </view>
+
+    <view class="container-out">
+        <view class="circle" wx:for="{{circleList}}" style="top:{{item.topCircle}}rpx;left:{{item.leftCircle}}rpx;background-color: {{(index%2==0)?colorCircleFirst:colorCircleSecond}};"></view>
+        <view class="container-in">
+            <view class="content-out" wx:for="{{awardList}}" style="top:{{item.topAward}}rpx;left:{{item.leftAward}}rpx;background-color: {{(index==indexSelect)?colorAwardSelect:colorAwardDefault}};box-shadow:{{(index==indexSelect)?'0 5px 0 #e7930a':'0 5px 0 #50852d'}}">
+                <image class="award-image" src="{{item.imageAward}}"></image>
+            </view>
+            <view class="start-btn" bindtap="startGame" style=" background-color:{{isRunning?'#e7930a':'#ffe400'}}">START</view>
+        </view>
+    </view>
+
+    <view class="my-gift">
+        <navigator url="../myGift/myGift"  class='prize-more'>查看我的奖品</navigator >
+    </view>
+</view>

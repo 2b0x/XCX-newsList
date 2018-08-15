@@ -42,7 +42,7 @@
             <view class='success-title'>
                 <view class='success-day'><text>您已连续签到2天</text></view>
                 <view class='success-num'><text>恭喜获得2次抽奖机会</text></view>
-                 <view class='lottery'><text>马上抽奖</text></view>
+                 <view class='lottery'><navigator bindtap="showSign" url="../lottery/lottery">马上抽奖</navigator></view>
             </view>
             <view class='success-close' bindtap='showSign'>
                 <image src='../../img/close.png'></image>
