@@ -286,9 +286,26 @@ Page({
                 that.wpLeftShow(500);
                 that.wpLeftHidden();
             }
-            
         }
         clearInterval(interval);
         time = 0;
+    },
+
+    tapName: function(e) {
+        console.log(e.currentTarget.dataset.url);
+        console.log(123)
+    },
+
+    toDetail: function(e) {
+        var targetUrl = encodeURIComponent(e.currentTarget.dataset.url);
+        // console.log(targetUrl)
+        var urls = '../detail/detail?url=' + targetUrl;
+              
+        wx.navigateTo({
+            url: urls,
+        })
     }
+    
+
+
 })

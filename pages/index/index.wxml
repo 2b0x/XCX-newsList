@@ -8,17 +8,18 @@
     <view class='itemBox'  bindtouchstart="touchStart" bindtouchend="touchEnd"  style="min-height:{{windowHeight+'px'}}">
         <block wx:for="{{newslist}}" wx:key="{{index}}" >
             <view class="item-{{index}}" wx:if="{{item.img.length>1}}">
-                <navigator class='item type01' url="../detail/detail?url={{item.url}}">
+                <!-- <text bindtap="tapName" data-url="{{item.url}}">test</text> -->
+                <view class='item type01' data-url="{{item.url}}" bindtap="toDetail">
                     <text class='title mar-b-15'>{{item.title}}</text>
                     <view class='imgBox'>
                         <image src="{{ite}}" wx:key="{{ite}}" wx:for="{{item.img}}" class="{{'img'+idx}}" wx:for-item="ite" wx:for-index="idx" wx:if="{{idx<3}}" mode="aspectFill"></image>  
                     </view>
                     <text class='from'>{{item.from}}</text>
-                </navigator>
+                </view>
             </view>
 
             <view class="item-{{index}}" wx:if="{{item.img.length==1}}">
-                <navigator class='item type02' url="../detail/detail?url={{item.url}}">
+                <view class='item type02' data-url="{{item.url}}" bindtap="toDetail">
                     <view class='lf pic'>
                         <image src="{{item['img'][0]}}" class="{{'img'+index}}"></image>
                     </view>
@@ -26,7 +27,7 @@
                         <view><text class='title'>{{item.title}}</text></view>
                         <view><text class='from'>{{item.from}}</text></view>
                     </view>
-                </navigator>
+                </view>
                 
             </view>
         </block>

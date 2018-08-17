@@ -6,8 +6,9 @@ Page({
   },
 
   onLoad: function (options) {
-    var targetUrl = options.url
-      console.log(targetUrl)
+      var targetUrl = options.url
+    // console.log(targetUrl)
+    
     var urls = 'http://10.13.144.3/aritice.php'
     var that = this
     wx.request({
