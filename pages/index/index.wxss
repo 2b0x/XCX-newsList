@@ -13,7 +13,7 @@ topNav{
     width:100%;
     height:100%;
     display:inline-block;
-    position:fixed;
+    /* position:fixed; */
     padding-top:80rpx;
     background-color: #FFFFFF;
     transition: all .3s;
@@ -31,14 +31,22 @@ topNav{
     right: -100%;
 } */
 /**app.wxss**/
+swiper{
+    height: 100%;
+}
+swiper-item.swiper-item{
+    position: relative;
+    
+    overflow-y: auto;
+}
 .container {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
   /* padding: 200rpx 0; */
   /* padding-top: 30rpx; */
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 } 
 .item{
   border-bottom:1px solid #dddddd;

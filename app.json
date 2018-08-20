@@ -1,14 +1,13 @@
 {
     "pages": [
-        "pages/index2/index2",
         "pages/index/index",
         "pages/me/me",
         "pages/logs/logs",
         "pages/login/login",
         "pages/myGift/myGift",
         "components/topNav/topNav",
-        "pages/lottery/lottery",
-        "pages/detail/detail"
+        "pages/detail/detail",
+        "pages/lottery/lottery"
     ],
     "window": {
         "navigationBarBackgroundColor": "#D60935",
@@ -22,7 +21,7 @@
         "color": "black",
         "list": [
             {
-                "pagePath": "pages/index2/index2",
+                "pagePath": "pages/index/index",
                 "text": "首页",
                 "iconPath": "img/index.png",
                 "selectedIconPath": "img/index_act.png"

@@ -1,6 +1,11 @@
 /* @import "../../lib/style/detail.wxss"; */
 @import "/wxParse/wxParse.wxss";
 
+page{
+    overflow-y: auto;
+    height: 100%;
+}
+
 .tmpl_partner{
     padding: 20rpx;
     font-size: 14px;

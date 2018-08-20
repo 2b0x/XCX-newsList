@@ -1,3 +1,4 @@
 <import src="../../wxParse/wxParse.wxml"/>
-<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
-<!-- <web-view src="http://10.13.144.3/aritice.php"></web-view> -->
+<!-- <template is="wxParse" data="{{wxParseData:article.nodes}}"/> -->
+<!-- <web-view src="https://xw.qq.com/a/pvideo/wpsvideo/h0751d8zbqu?ADTAG=wpsvideo&pgv_ref=wpsvideo&name=wpsvideo"></web-view> -->
+<web-view src="{{targetURL}}" style="height:{{height}}"></web-view>

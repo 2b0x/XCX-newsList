@@ -1,10 +1,3 @@
-var time = 0;
-var touchDotX = 0;//触摸时X轴的原点
-var touchDotY = 0;//触摸时y轴的原点
-var interval = "";
-var flag_hd = true;
-var loadingTime = "";
-
 Page({
     data: {
         navData: [
@@ -24,34 +17,32 @@ Page({
         ],
         url: 'http://feed.mini.wps.cn/feed/v1/news?hdid=78ae09ead772825aa5a4d86b2d2a75fb&type=0&catid=',
         newslist: [],
-        // listCache: [],
-        // navCur: 0,
-        wpL: '-100%',
-        wpR: '-100%',
-        wpLShow: 'block',
-        wpRShow: 'block',
         windowHeight: 0,
         windowWidth: 0,
         cur: 0,
-        isHideLoadMore: 'none'
+        offsetTop: 0,
+        isHideLoadMore: 'none',
+
     },
 
     onLoad: function() {
-        wx.getSystemInfo({
-            success: (res) => {
-                this.setData({
-                    windowHeight: res.windowHeight,
-                    windowWidth: res.windowWidth
-                })
-            }
-        })  
+        var that = this;
+        // wx.getSystemInfo({
+        //     success: (res) => {
+        //         this.setData({
+        //             windowHeight: res.windowHeight,
+        //             windowWidth: res.windowWidth
+        //         })
+        //     }
+        // }) 
+        that.switchList();  
     },
 
     onReady: function() {
-        this.loadList('switch');
+        
     },
 
-    onPullDownRefresh: function() {
+    onPullDownRefresh: function () {
         var that = this;
         wx.setNavigationBarTitle({
             title: '刷新中……'
@@ -59,7 +50,7 @@ Page({
 
         wx.showNavigationBarLoading();
 
-        this.loadList('refresh', function() {
+        this.loadList('refresh', function () {
             wx.stopPullDownRefresh();
             wx.hideNavigationBarLoading();
             wx.setNavigationBarTitle({
@@ -68,244 +59,158 @@ Page({
         });
     },
 
-    onReachBottom: function() {
-        this.setData({
+    bottomAad: function () {
+        var that = this;
+        that.setData({
             isHideLoadMore: 'block'
         })
-        this.loadList('addMore')
+        setTimeout(function() {
+            that.loadList('addMore')
+        },800)
+        
     },
 
-    onShow: function () {
-        flag_hd = true;
-        clearInterval(interval);
-        time = 0;
-    },
-
-    loadList: function(repaint, callback) {
+    hiddenLoadMore: function() {
         var that = this;
-        var url = that.data.url + that.data.navData[that.data.cur].catid;
-        var StorageDataCur = 'newslist' + that.data.cur;
-        var StorageData = wx.getStorageSync(StorageDataCur);
+        that.setData({
+            isHideLoadMore: 'none'
+        })
+    },
+
+    loadList: function (repaint, callback) {
+        var that = this;
+        var repaint = repaint;
+        var cur = that.data.cur;
+        var url = that.data.url + that.data.navData[cur].catid
+        var StorageDataCur = 'newslist' + cur;
         wx.request({
             url: url,
             method: 'get',
             success: function(res) {
-                var status = res.data.result;
-                if(status==='ok'){
+                // console.log(res)
+                var statusCode = res.statusCode;
+                if (statusCode == 200) {
+                    var status = res.data.result;
                     var total = res.data.data.total;
-                    if(total==0){
-                        wx.showToast({
-                            icon: 'none',
-                            title: '暂无新数据哦~',
-                            duration: 1500,
-                            mask: true
-                        });
-                        that.setData({
-                            newslist: StorageData
-                        })
-                    }else{
-                        var data = res.data.data.news;
-                        // 记录加载
-                        var dataArr = that.data.newslist;
+                    if (status === 'ok' && total > 0) {
+                        var newData = res.data.data.news;
+                        var oldData = that.data.newslist[cur];
                         if (repaint === 'addMore') {
+                            that.data.newslist[cur] = oldData.concat(newData);
                             that.setData({
-                                newslist: dataArr.concat(data)
+                                newslist: that.data.newslist
                             })
                         } else if (repaint === 'refresh') {
-                            wx.setStorageSync(StorageDataCur, data)
+                            wx.setStorageSync(StorageDataCur, newData)
+                            that.data.newslist[cur] = newData.concat(oldData);
                             that.setData({
-                                newslist: data.concat(dataArr)
+                                newslist: that.data.newslist
                             })
-                        } else if (repaint === 'switch') {
-                            if (StorageData) {
+                        }
+                    } else {
+                        console.log('not data')
+                    }
+                }else{
+                    console.log('statusCode is not 200')
+                } 
+            },
+            fail: function(res) {
+                console.log('request fail')
+            }
+        })
+        this.hiddenLoadMore();
+    },
+
+    switchList:function (callback) {
+        var that = this;
+        var cur = that.data.cur;
+        var curData = that.data.newslist[cur];
+        if(!curData){
+            // console.log('!curData')
+            var url = that.data.url + that.data.navData[cur].catid
+            var StorageDataCur = 'newslist' + cur;
+            var StorageData = wx.getStorageSync(StorageDataCur);
+            if(StorageData.length>0){
+                // console.log('hasCache')
+                that.data.newslist[cur] = StorageData;
+                that.setData({
+                    newslist: that.data.newslist
+                })
+            }else{
+                wx.request({
+                    url: url,
+                    method: 'get',
+                    success: function (res) {
+                        // console.log(res)
+                        var statusCode = res.statusCode;
+                        if(statusCode==200){
+                            var status = res.data.result;
+                            var total = res.data.data.total;
+                            console.log(total)
+                            if (status === 'ok' && total > 0) {
+                                var newData = res.data.data.news;
+                                wx.setStorageSync(StorageDataCur, newData);
+                                that.data.newslist[cur] = newData;
                                 that.setData({
-                                    newslist: StorageData
+                                    newslist: that.data.newslist
                                 })
                             } else {
-                                wx.setStorageSync(StorageDataCur, data)
-                                that.setData({
-                                    newslist: data
-                                })
+                                console.log('not data')
                             }
+                        }else{
+                            console.log('statusCode is not 200')
                         }
-                        that.setData({
-                            isHideLoadMore: 'none'
-                        })
-                    } 
-                }else{
-                    // console.log('data load error')
-                    wx.showToast({
-                        icon: 'none',
-                        title: '等会儿嘛~等会儿再来嘛~',
-                        duration: 2000,
-                        mask: true
-                    });
-                    that.setData({
-                        isHideLoadMore: 'none'
-                    })
-                }              
-                
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '当前网络异常，请稍后再试',
-                    duration: 2000,
-                    mask: true
-                });
-                that.setData({
-                    isHideLoadMore: 'none'
+                    },
+                    fail: function (res) {
+                        console.log('request fail')
+                    }
                 })
             }
-        });
-        
-        callback = callback || function() {};
+        }      
+        setTimeout(function () {
+            that.setData({
+                offsetTop: 0
+            })
+        }, 800)
+        callback = callback || function(){};
         callback();
     },
 
+
     onMyEvent: function(e) {
         this.data.cur = e.detail.cur;
-        wx.pageScrollTo({
-            scrollTop: 0,
-            duration: 300
-        })
-        this.loadList('switch')
-    },
-
-    wpLeftShow: function (hiddenTime) {
-        var that = this;
-        var hiddenTime = hiddenTime;
-        this.selectComponent('#topNav').showDemo();
         this.setData({
-            wpLShow: 'block',
-            wpL: '0px'
-        })  
-    },
-
-    wpRightShow: function (hiddenTime) {
-        var that = this;
-        var hiddenTime = hiddenTime;
-        this.selectComponent('#topNav').showDemo();
+            cur: this.data.cur
+        })
+        this.switchList();
         this.setData({
-            wpRShow: 'block',
-            wpR: '0px'
+            offsetTop: '80rpx'
         })
-    },
-
-    wpLeftHidden: function(){
-        var that = this;
-        clearTimeout(loadingTime)
-        loadingTime = setTimeout(function(){
-            that.setData({
-                wpLShow: 'none',
-                wpL: '-100%'
-            })
-            setTimeout(function () {
-                that.setData({
-                    wpLShow: 'block'
-                })
-                flag_hd = true;
-            }, 50) 
-            that.loadList('switch')
-        },1000)
-    },
-
-    wpRightHidden: function () {
-        var that = this;
-        clearTimeout(loadingTime)
-        loadingTime = setTimeout(function () {
-            that.setData({
-                wpRShow: 'none',
-                wpR: '-100%'
-            })
-            setTimeout(function () {
-                that.setData({
-                    wpRShow: 'block'
-                })
-                flag_hd = true;
-            }, 50)
-            that.loadList('switch')
-        }, 1000)
-    },
-
-    touchStart: function (e) {
-        var that = this;
-        touchDotX = e.touches[0].pageX;
-        touchDotY = e.touches[0].pageY;
-        that.setData({
-            wpLShow: 'none',
-            wpRShow: 'none'
-            
-        })
-        flag_hd = true; 
-        setTimeout(function () {
-            that.setData({
-                wpLShow: 'block',
-                wpRShow: 'block',
-                wpL: '-100%',
-                wpR: '-100%'
-            })             
-        }, 50)  
-        interval = setInterval(function () {
-            time++;
-        }, 100);   
-    },
-
-    touchEnd: function (e) {
-        var that = this;
-        var touchMoveX = e.changedTouches[0].pageX;
-        var touchMoveY = e.changedTouches[0].pageY;
-        var moveY = Math.abs(touchMoveY - touchDotY);
-        if (touchMoveX - touchDotX <= -50 && time < 10 && moveY < 10 && flag_hd == true) {
-            flag_hd = false;
-            // console.log("向左滑动");
-            var cur = that.data.cur
-            if(cur==(that.data.navData.length)-1){
-                console.log('已经到尽头')
-            }else{
-                that.setData({
-                    cur: cur + 1,
-                    newslist: []
-                })
-                that.wpRightShow(500);
-                that.wpRightHidden();
-            }
-           
-        } 
-        if (touchMoveX - touchDotX >= 50 && time < 10 && moveY < 10 && flag_hd == true) {
-            flag_hd = false;
-            // console.log("向右滑动");
-            var cur = that.data.cur
-            if(cur==0){
-                console.log('已经到尽头')
-            }else{
-                that.setData({
-                    cur: cur - 1,
-                    newslist: []
-                })
-                that.wpLeftShow(500);
-                that.wpLeftHidden();
-            }
-        }
-        clearInterval(interval);
-        time = 0;
-    },
-
-    tapName: function(e) {
-        console.log(e.currentTarget.dataset.url);
-        console.log(123)
     },
 
     toDetail: function(e) {
         var targetUrl = encodeURIComponent(e.currentTarget.dataset.url);
-        // console.log(targetUrl)
-        var urls = '../detail/detail?url=' + targetUrl;
-              
+        var urls = '../detail/detail?url=' + targetUrl;             
         wx.navigateTo({
             url: urls,
         })
-    }
-    
+    },
 
+    changeCurrent: function(e) {
+        var that = this;
+        var cur = e.detail.current;
+        that.setData({
+            cur: cur,
+        })    
+        this.selectComponent('#topNav').showDemo();
+        this.switchList();
+        
+    },
+
+    test:function() {
+        this.setData({
+            cur: 3
+        })
+    }
 
 })
