@@ -1,21 +1,9 @@
 Page({
     data: {
         navData: [
-            {text: '推荐',catid: 0},
-            {text: '热点',catid: 1},
-            {text: '娱乐',catid: 1183},
-            {text: '汽车',catid: 1185},
-            {text: '游戏',catid: 1349},
-            {text: '时尚',catid: 1173},
-            {text: '科技',catid: 1179},
-            {text: '体育',catid: 1178},
-            {text: '文化',catid: 1172},
-            {text: '教育',catid: 1186},
-            {text: '房产',catid: 1350},
-            {text: '旅游',catid: 1298},
-            {text: '军事',catid: 1474}
+            
         ],
-        url: 'http://feed.mini.wps.cn/feed/v1/news?hdid=78ae09ead772825aa5a4d86b2d2a75fb&type=0&catid=',
+        url: '',
         newslist: [],
         windowHeight: 0,
         windowWidth: 0,
